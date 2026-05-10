@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dhanunjay — AI/ML @ IIT Dharwad</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #3B3030;
+    --surface: #2e2424;
+    --border: #5a3f3f;
+    --accent: #795757;
+    --accent-light: #a07070;
+    --accent2: #FFF0D1;
+    --text: #FFF0D1;
+    --muted: #b09080;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); overflow-x:hidden; }
+
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events:none; z-index:1000; opacity:0.5;
+  }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:1.2rem 3rem; display:flex; justify-content:space-between; align-items:center;
+    border-bottom:1px solid transparent; transition:all 0.3s;
+  }
+  nav.scrolled { background:rgba(59,48,48,0.92); border-bottom-color:var(--border); backdrop-filter:blur(16px); }
+  .nav-logo { font-family:var(--mono); font-size:0.85rem; color:var(--accent2); letter-spacing:0.1em; }
+  .nav-links { display:flex; gap:2rem; list-style:none; }
+  .nav-links a { font-family:var(--mono); font-size:0.72rem; color:var(--muted); text-decoration:none; letter-spacing:0.12em; text-transform:uppercase; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--text); }
+
+  .hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:0 10vw; position:relative; overflow:hidden; }
+  .hero-grid-bg { position:absolute; inset:0; background-image:linear-gradient(rgba(255,240,209,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,240,209,0.03) 1px,transparent 1px); background-size:60px 60px; }
+  .hero-glow { position:absolute; width:700px; height:700px; border-radius:50%; background:radial-gradient(circle,rgba(121,87,87,0.3) 0%,transparent 70%); top:-200px; right:-100px; pointer-events:none; }
+  .hero-glow2 { position:absolute; width:400px; height:400px; border-radius:50%; background:radial-gradient(circle,rgba(255,240,209,0.06) 0%,transparent 70%); bottom:100px; left:-50px; pointer-events:none; }
+
+  .hero-tag { font-family:var(--mono); font-size:0.72rem; color:var(--accent2); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:1.5rem; opacity:0; animation:fadeUp 0.6s ease forwards 0.2s; }
+  .hero-name { font-size:clamp(2.6rem,7vw,6.5rem); font-weight:800; line-height:1.0; letter-spacing:-0.03em; margin-bottom:1.2rem; opacity:0; animation:fadeUp 0.7s ease forwards 0.4s; }
+  .hero-name span { background:linear-gradient(135deg,#a07070 0%,#FFF0D1 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .hero-badges { display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:2rem; opacity:0; animation:fadeUp 0.7s ease forwards 0.6s; }
+  .hero-badge { font-family:var(--mono); font-size:0.63rem; padding:0.28rem 0.7rem; border:1px solid var(--border); border-radius:20px; color:var(--muted); letter-spacing:0.07em; }
+  .hero-badge.hl { border-color:rgba(255,240,209,0.3); color:var(--accent2); background:rgba(255,240,209,0.06); }
+  .hero-tagline { font-family:var(--mono); font-size:clamp(0.82rem,1.4vw,1rem); color:var(--muted); max-width:560px; line-height:1.85; margin-bottom:2.5rem; opacity:0; animation:fadeUp 0.7s ease forwards 0.7s; }
+  .hero-tagline strong { color:var(--accent2); font-weight:400; }
+  .hero-cta { display:flex; gap:1rem; flex-wrap:wrap; opacity:0; animation:fadeUp 0.7s ease forwards 0.85s; }
+  .btn { display:inline-flex; align-items:center; gap:0.5rem; padding:0.75rem 1.75rem; border-radius:4px; font-family:var(--mono); font-size:0.78rem; letter-spacing:0.08em; text-decoration:none; transition:all 0.2s; cursor:pointer; border:none; }
+  .btn-primary { background:var(--accent); color:var(--accent2); }
+  .btn-primary:hover { background:#9a6f6f; transform:translateY(-2px); box-shadow:0 8px 30px rgba(121,87,87,0.5); }
+  .btn-outline { background:transparent; color:var(--text); border:1px solid var(--border); }
+  .btn-outline:hover { border-color:var(--accent2); color:var(--accent2); transform:translateY(-2px); }
+  .hero-scroll { position:absolute; bottom:2.5rem; left:10vw; font-family:var(--mono); font-size:0.68rem; color:var(--muted); letter-spacing:0.15em; display:flex; align-items:center; gap:0.75rem; opacity:0; animation:fadeUp 0.7s ease forwards 1.2s; }
+  .hero-scroll::before { content:''; width:40px; height:1px; background:var(--muted); }
+
+  section { padding:7rem 10vw; position:relative; }
+  .section-label { font-family:var(--mono); font-size:0.68rem; color:var(--accent-light); letter-spacing:0.25em; text-transform:uppercase; margin-bottom:1rem; }
+  .section-title { font-size:clamp(1.8rem,4vw,3rem); font-weight:800; letter-spacing:-0.02em; margin-bottom:1rem; }
+  .section-subtitle { font-family:var(--mono); color:var(--muted); font-size:0.86rem; line-height:1.75; max-width:520px; margin-bottom:4rem; }
+
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; }
+  .about-text p { font-family:var(--mono); font-size:0.84rem; color:var(--muted); line-height:1.9; margin-bottom:1.2rem; }
+  .about-text p strong { color:var(--text); }
+  .about-right { display:flex; flex-direction:column; gap:1.5rem; }
+  .courses-block { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:1.5rem; }
+  .courses-title { font-family:var(--mono); font-size:0.65rem; color:var(--accent2); letter-spacing:0.18em; text-transform:uppercase; margin-bottom:1rem; opacity:0.7; }
+  .courses-list { display:flex; flex-wrap:wrap; gap:0.5rem; }
+  .ctag { font-family:var(--mono); font-size:0.62rem; padding:0.25rem 0.65rem; border-radius:3px; }
+  .ctag-done { background:rgba(121,87,87,0.25); color:#d4b0a0; }
+  .ctag-active { background:rgba(255,240,209,0.1); color:var(--accent2); border:1px solid rgba(255,240,209,0.2); }
+
+  .projects { background:var(--surface); }
+  .projects-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:1.5rem; }
+  .project-card { background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:2rem; transition:all 0.3s; position:relative; overflow:hidden; }
+  .project-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(121,87,87,0.1) 0%,transparent 60%); opacity:0; transition:opacity 0.3s; }
+  .project-card:hover { border-color:var(--accent2); transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,0.4); }
+  .project-card:hover::before { opacity:1; }
+  .project-card.feat { border-color:rgba(255,240,209,0.2); grid-column:span 2; }
+  .project-card.feat::after { content:'FEATURED'; position:absolute; top:1.2rem; right:1.2rem; font-family:var(--mono); font-size:0.58rem; color:var(--accent2); letter-spacing:0.15em; border:1px solid rgba(255,240,209,0.2); padding:0.2rem 0.5rem; border-radius:3px; opacity:0.7; }
+  .project-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; }
+  .project-icon { font-size:1.8rem; }
+  .project-links { display:flex; gap:0.6rem; }
+  .project-links a { font-family:var(--mono); font-size:0.68rem; color:var(--muted); text-decoration:none; padding:0.28rem 0.55rem; border:1px solid var(--border); border-radius:4px; transition:all 0.2s; }
+  .project-links a:hover { color:var(--accent2); border-color:var(--accent2); }
+  .project-title { font-size:1.08rem; font-weight:600; margin-bottom:0.6rem; color:var(--text); }
+  .project-desc { font-family:var(--mono); font-size:0.78rem; color:var(--muted); line-height:1.75; margin-bottom:1.5rem; }
+  .project-desc strong { color:var(--text); font-weight:400; }
+  .ptags { display:flex; flex-wrap:wrap; gap:0.5rem; }
+  .tag { font-family:var(--mono); font-size:0.6rem; padding:0.22rem 0.55rem; border-radius:3px; letter-spacing:0.08em; text-transform:uppercase; }
+  .t-cv { background:rgba(255,240,209,0.1); color:var(--accent2); }
+  .t-ml { background:rgba(121,87,87,0.3); color:#d4b0a0; }
+  .t-nlp { background:rgba(160,112,112,0.25); color:#e0c0b0; }
+  .t-dl { background:rgba(121,87,87,0.2); color:#c4a090; }
+  .t-xr { background:rgba(200,140,120,0.2); color:#e8b8a0; }
+  .t-bot { background:rgba(255,240,209,0.08); color:#c8b090; }
+
+  .skills-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5rem; }
+  .skill-group { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:1.75rem; }
+  .sgt { font-family:var(--mono); font-size:0.65rem; color:var(--accent2); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:1.25rem; display:flex; align-items:center; gap:0.5rem; opacity:0.7; }
+  .sgt::after { content:''; flex:1; height:1px; background:var(--border); }
+  .skill-items { display:flex; flex-direction:column; gap:0.9rem; }
+  .skill-item { display:flex; justify-content:space-between; align-items:center; }
+  .skill-name { font-family:var(--mono); font-size:0.78rem; color:var(--text); }
+  .skill-bar { width:120px; height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+  .skill-fill { height:100%; background:linear-gradient(90deg,#795757,#FFF0D1); border-radius:2px; transform-origin:left; transform:scaleX(0); transition:transform 1s cubic-bezier(0.23,1,0.32,1); }
+
+  .achievements { background:var(--surface); }
+  .ach-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
+  .ach-card { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:1.5rem; display:flex; gap:1rem; align-items:flex-start; transition:all 0.2s; }
+  .ach-card:hover { border-color:var(--accent2); transform:translateY(-2px); }
+  .ach-icon { font-size:1.5rem; flex-shrink:0; }
+  .ach-title { font-size:0.88rem; font-weight:600; margin-bottom:0.3rem; color:var(--text); }
+  .ach-desc { font-family:var(--mono); font-size:0.7rem; color:var(--muted); line-height:1.65; }
+
+  .contact-inner { max-width:640px; margin:0 auto; text-align:center; }
+  .contact-inner .section-label { display:block; }
+  .contact-inner .section-title { font-size:clamp(2rem,5vw,3.5rem); }
+  .contact-inner .section-subtitle { margin:1rem auto 3rem; max-width:420px; }
+  .contact-links { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; margin-bottom:2rem; }
+  .contact-link { display:flex; align-items:center; gap:0.5rem; padding:0.82rem 1.35rem; border:1px solid var(--border); border-radius:6px; text-decoration:none; color:var(--muted); font-family:var(--mono); font-size:0.75rem; letter-spacing:0.05em; transition:all 0.2s; }
+  .contact-link:hover { color:var(--text); border-color:var(--accent2); background:rgba(255,240,209,0.05); transform:translateY(-2px); }
+  .contact-email { font-family:var(--mono); font-size:0.83rem; color:var(--muted); }
+  .contact-email a { color:var(--accent2); text-decoration:none; }
+  .contact-email a:hover { text-decoration:underline; }
+
+  footer { padding:2rem 10vw; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; }
+  .footer-text { font-family:var(--mono); font-size:0.7rem; color:var(--muted); }
+  .footer-text span { color:#d4a080; }
+  .divider { width:100%; height:1px; background:linear-gradient(90deg,transparent,var(--border),transparent); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+  .reveal { opacity:0; transform:translateY(30px); transition:opacity 0.7s ease,transform 0.7s ease; }
+  .reveal.visible { opacity:1; transform:none; }
+
+  .cursor-dot { position:fixed; width:8px; height:8px; background:var(--accent2); border-radius:50%; pointer-events:none; z-index:9999; transition:transform 0.1s; transform:translate(-50%,-50%); }
+  .cursor-ring { position:fixed; width:32px; height:32px; border:1px solid rgba(255,240,209,0.3); border-radius:50%; pointer-events:none; z-index:9998; transition:width 0.2s,height 0.2s; transform:translate(-50%,-50%); }
+
+  @media(max-width:900px){ .about-grid{grid-template-columns:1fr;gap:3rem;} .project-card.feat{grid-column:span 1;} }
+  @media(max-width:768px){ nav{padding:1rem 1.5rem;} .nav-links{gap:1.2rem;} section{padding:5rem 6vw;} .hero{padding:0 6vw;} .cursor-dot,.cursor-ring{display:none;} }
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursor-dot"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<nav id="nav">
+  <div class="nav-logo">// Dhanunjayarao Tangirala</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#achievements">Awards</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="home">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <p class="hero-tag">// B.Tech Mathematics &amp; Computing &middot; IIT Dharwad</p>
+  <h1 class="hero-name">Dhanunjay<br><span>Tangirala</span></h1>
+  <div class="hero-badges">
+    <span class="hero-badge hl">Computer Vision</span>
+    <span class="hero-badge hl">Deep Learning</span>
+    <span class="hero-badge">NLP</span>
+    <span class="hero-badge">YOLO Architecture</span>
+    <span class="hero-badge">PyTorch</span>
+    <span class="hero-badge">Cosmosoc Organiser</span>
+  </div>
+  <p class="hero-tagline">Building models that see, understand, and act &mdash; from <strong>planetary crater detection</strong> to <strong>mixed reality assembly guidance on HoloLens 2</strong>. I turn research papers into running systems.</p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn btn-primary">View Projects &rarr;</a>
+    <a href="#contact" class="btn btn-outline">Get in Touch</a>
+  </div>
+  <div class="hero-scroll">SCROLL TO EXPLORE</div>
+</section>
+
+<div class="divider"></div>
+
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <p class="section-label">// About</p>
+      <h2 class="section-title">Engineer.<br>Researcher.<br>Builder.</h2><br>
+      <p>I'm a <strong>B.Tech student in Mathematics and Computing at IIT Dharwad</strong>, passionate about AI systems that work in the real world &mdash; not just on benchmarks.</p>
+      <p>My work focuses on <strong>computer vision</strong> and <strong>object detection</strong>, with hands-on experience deploying models to edge devices and mixed reality hardware like the <strong>Microsoft HoloLens 2</strong>.</p>
+      <p>Beyond building, I give back as an <strong>organiser at Cosmosoc</strong>, IIT Dharwad's Data Science Club &mdash; running ML/DL workshops and hackathons to help peers get hands-on with real problems.</p><br>
+      <a href="#projects" class="btn btn-outline" style="display:inline-flex;">See my work &rarr;</a>
+    </div>
+    <div class="about-right reveal" style="transition-delay:0.15s">
+      <div class="courses-block">
+        <div class="courses-title">Coursework</div>
+        <div class="courses-list">
+          <span class="ctag ctag-done">Data Structures &amp; Algorithms</span>
+          <span class="ctag ctag-done">Design &amp; Analysis of Algorithms</span>
+          <span class="ctag ctag-done">Linear Algebra</span>
+          <span class="ctag ctag-done">Probability &amp; Statistics</span>
+          <span class="ctag ctag-active">&#9733; Intro to AI</span>
+          <span class="ctag ctag-active">&#9733; NLP</span>
+        </div>
+        <p style="font-family:var(--mono);font-size:0.6rem;color:var(--muted);margin-top:0.75rem;">&#9733; Currently pursuing</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="projects" id="projects">
+  <p class="section-label reveal">// Key Projects</p>
+  <h2 class="section-title reveal">Things I've built.</h2>
+  <p class="section-subtitle reveal">From planetary craters to industrial HoloLens deployments &mdash; real problems, real hardware, real constraints.</p>
+  <div class="projects-grid">
+
+    <div class="project-card feat reveal">
+      <div class="project-header">
+        <div class="project-icon">&#129405;</div>
+        <div class="project-links"><a href="#">GitHub</a></div>
+      </div>
+      <div class="project-title">Object Detection in Mixed Reality</div>
+      <div class="project-desc">End-to-end pipeline for precision industrial assembly guidance on <strong>Microsoft HoloLens 2</strong>. Built a synthetic dataset of 8 V-Lock components with real-time augmentation for occlusion-heavy scenarios. Applied <strong>hardware-aware INT8 post-training quantization</strong> on YOLOv8n and deployed via Unity Sentis runtime.</div>
+      <div class="ptags">
+        <span class="tag t-cv">Computer Vision</span>
+        <span class="tag t-xr">Mixed Reality</span>
+        <span class="tag t-dl">YOLOv8n</span>
+        <span class="tag t-ml">INT8 Quantization</span>
+        <span class="tag t-ml">Unity Sentis</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal" style="transition-delay:0.1s">
+      <div class="project-header">
+        <div class="project-icon">&#129680;</div>
+        <div class="project-links"><a href="#">GitHub</a></div>
+      </div>
+      <div class="project-title">Crater &amp; Boulder Detection</div>
+      <div class="project-desc">Object detection for planetary surface features using YOLOv8n. Fine-tuned on a custom annotated dataset with hyperparameter optimization and data augmentation. Deep understanding of YOLO backbone, neck, and detection head architecture.</div>
+      <div class="ptags">
+        <span class="tag t-cv">Computer Vision</span>
+        <span class="tag t-dl">YOLOv8n</span>
+        <span class="tag t-ml">Data Augmentation</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal" style="transition-delay:0.2s">
+      <div class="project-header">
+        <div class="project-icon">&#129302;</div>
+        <div class="project-links"><a href="#">GitHub</a></div>
+      </div>
+      <div class="project-title">Kronos Discord Bot</div>
+      <div class="project-desc">AI-powered team management bot integrating OpenRouter API with LLaMA, DeepSeek, Gemini, and Mistral. Activity tracking across IDEs with 30+ metrics in PostgreSQL. NLP-based reminder system with automated notifications.</div>
+      <div class="ptags">
+        <span class="tag t-nlp">NLP</span>
+        <span class="tag t-bot">LLM Integration</span>
+        <span class="tag t-ml">PostgreSQL</span>
+        <span class="tag t-bot">OpenRouter API</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal" style="transition-delay:0.15s">
+      <div class="project-header">
+        <div class="project-icon">&#127973;</div>
+        <div class="project-links"><a href="#">GitHub</a></div>
+      </div>
+      <div class="project-title">Disease Prediction from Symptoms</div>
+      <div class="project-desc">XGBoost classifier for multi-class disease prediction using symptom data with feature engineering. Intuitive input interface for predictions &mdash; demonstrating practical ensemble learning in healthcare diagnostics.</div>
+      <div class="ptags">
+        <span class="tag t-ml">XGBoost</span>
+        <span class="tag t-ml">Ensemble Learning</span>
+        <span class="tag t-ml">Healthcare AI</span>
+        <span class="tag t-ml">Feature Engineering</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="skills">
+  <p class="section-label reveal">// Skills &amp; Tools</p>
+  <h2 class="section-title reveal">What I work with.</h2>
+  <p class="section-subtitle reveal">The stack I use to go from research paper to trained model to deployed system.</p>
+  <div class="skills-grid">
+    <div class="skill-group reveal">
+      <div class="sgt">Languages</div>
+      <div class="skill-items">
+        <div class="skill-item"><span class="skill-name">Python</span><div class="skill-bar"><div class="skill-fill" data-width="0.92"></div></div></div>
+        <div class="skill-item"><span class="skill-name">C</span><div class="skill-bar"><div class="skill-fill" data-width="0.72"></div></div></div>
+        <div class="skill-item"><span class="skill-name">LaTeX</span><div class="skill-bar"><div class="skill-fill" data-width="0.75"></div></div></div>
+      </div>
+    </div>
+    <div class="skill-group reveal" style="transition-delay:0.1s">
+      <div class="sgt">ML / DL Frameworks</div>
+      <div class="skill-items">
+        <div class="skill-item"><span class="skill-name">PyTorch</span><div class="skill-bar"><div class="skill-fill" data-width="0.88"></div></div></div>
+        <div class="skill-item"><span class="skill-name">scikit-learn</span><div class="skill-bar"><div class="skill-fill" data-width="0.85"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Ultralytics YOLO</span><div class="skill-bar"><div class="skill-fill" data-width="0.90"></div></div></div>
+      </div>
+    </div>
+    <div class="skill-group reveal" style="transition-delay:0.2s">
+      <div class="sgt">Core Competencies</div>
+      <div class="skill-items">
+        <div class="skill-item"><span class="skill-name">YOLO Architecture</span><div class="skill-bar"><div class="skill-fill" data-width="0.90"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Transfer Learning</span><div class="skill-bar"><div class="skill-fill" data-width="0.85"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Model Quantization</span><div class="skill-bar"><div class="skill-fill" data-width="0.78"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Git</span><div class="skill-bar"><div class="skill-fill" data-width="0.82"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="achievements" id="achievements">
+  <p class="section-label reveal">// Achievements &amp; Roles</p>
+  <h2 class="section-title reveal">Recognition &amp; Community.</h2>
+  <p class="section-subtitle reveal" style="margin-bottom:3rem;">Competing, winning, and helping others grow in AI at IIT Dharwad.</p>
+  <div class="ach-grid">
+    <div class="ach-card reveal">
+      <div class="ach-icon">&#129352;</div>
+      <div><div class="ach-title">2nd Place &mdash; Aurora 2.0 Hackathon</div><div class="ach-desc">Placed 2nd at IIT Dharwad's Aurora 2.0 Hackathon out of competing teams institute-wide.</div></div>
+    </div>
+    <div class="ach-card reveal" style="transition-delay:0.1s">
+      <div class="ach-icon">&#128161;</div>
+      <div><div class="ach-title">Most Innovative Solution</div><div class="ach-desc">Won Most Innovative Solution at the Sleepless Coding Saga hosted by the Coding Club at IIT Dharwad.</div></div>
+    </div>
+    <div class="ach-card reveal" style="transition-delay:0.15s">
+      <div class="ach-icon">&#128300;</div>
+      <div><div class="ach-title">Cosmosoc Organiser</div><div class="ach-desc">Organising ML/DL workshops and hackathons at IIT Dharwad's Data Science Club, fostering hands-on AI experience institute-wide.</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-label reveal">// Contact</p>
+    <h2 class="section-title reveal">Let's connect.</h2>
+    <p class="section-subtitle reveal">Open to research collaborations, internships, and interesting problems in CV and deep learning.</p>
+    <div class="contact-links reveal">
+      <a href="mailto:dhanunjayachinnu123&#64;gmail.com" class="contact-link">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email
+      </a>
+      <a href="#" class="contact-link">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+      <a href="#" class="contact-link">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        GitHub
+      </a>
+      <a href="tel:+919441205506" class="contact-link">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.81a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+        +91-9441205506
+      </a>
+    </div>
+    <p class="contact-email reveal">Or email directly: <a href="mailto:dhanunjayachinnu123&#64;gmail.com">dhanunjayachinnu123&#64;gmail.com</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-text">&copy; 2025 Dhanunjayarao Tangirala &mdash; IIT Dharwad, Karnataka</div>
+  <div class="footer-text">Built with <span>&hearts;</span> &amp; PyTorch</div>
+</footer>
+
+<script>
+  const dot = document.getElementById('cursor-dot');
+  const ring = document.getElementById('cursor-ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){ mx=e.clientX; my=e.clientY; dot.style.left=mx+'px'; dot.style.top=my+'px'; });
+  (function anim(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(anim); })();
+  document.querySelectorAll('a,button,.project-card,.ach-card').forEach(function(el){
+    el.addEventListener('mouseenter',function(){ dot.style.transform='translate(-50%,-50%) scale(2.5)'; ring.style.width='50px'; ring.style.height='50px'; });
+    el.addEventListener('mouseleave',function(){ dot.style.transform='translate(-50%,-50%) scale(1)'; ring.style.width='32px'; ring.style.height='32px'; });
+  });
+
+  var nav = document.getElementById('nav');
+  window.addEventListener('scroll',function(){ nav.classList.toggle('scrolled', window.scrollY>50); });
+
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); });
+  },{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+
+  var sObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.querySelectorAll('.skill-fill').forEach(function(b){ b.style.transform='scaleX('+b.dataset.width+')'; });
+      }
+    });
+  },{threshold:0.3});
+  document.querySelectorAll('.skill-group').forEach(function(el){ sObs.observe(el); });
+</script>
+</body>
+</html>
